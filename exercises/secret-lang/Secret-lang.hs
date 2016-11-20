@@ -1,32 +1,32 @@
 import Data.Char(toLower)
 
-isChar :: Char -> Bool
-isChar = undefined
-
+checkIfElem :: Char -> [Char] -> Bool
+checkIfElem _ [] = False
+checkIfElem l (x:xs) | l == x = True
+                     | otherwise = checkIfElem l xs
 
 isVowel :: Char -> Bool
-isVowel = undefined
+isVowel l | checkIfElem l ['a', 'o', 'u', 'i', 'e'] = True
+          | checkIfElem l ['A', 'O', 'U', 'I', 'E'] = True
+          | otherwise = False
 
 
 isConsonant :: Char -> Bool
-isConsonant = undefined
+isConsonant l | not (isVowel l) && (checkIfElem l ['a'..'z'] || checkIfElem l ['A'..'Z']) = True
+              | otherwise = False
 
 
 encode :: String -> String
-encode = undefined
+encode [] = []
+encode (x:xs) | isConsonant x = x : 'o' : toLower x : encode xs
+              | otherwise = x : encode xs
 
-
--- Bonus #1
-encode' :: String -> String
-encode' = undefined
-
-
--- Bonus #2
 dropN :: Int -> String -> String
-dropN = undefined
+dropN 0 str = str
+dropN _ [] = []
+dropN n (x:xs) = dropN (n - 1) xs
 
-
--- Assume we'll be decoding only valid words
 decode :: String -> String
-decode = undefined
-
+decode [] = []
+decode (x:xs) | isConsonant x = x : decode (dropN 2 xs)
+              | otherwise = x : decode xs
